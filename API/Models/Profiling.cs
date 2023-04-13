@@ -9,5 +9,9 @@ public class Profiling
     [Key, Column("employee_nik", TypeName = "char(5)")]
     public string EmployeeNIK { get; set; }
     [Column("education_id")]
-    public int EducationID { get; set; }
+    public int? EducationID { get; set; }
+
+    //Cardinality
+    public Education Education { get; set; }
+    public Employee Employee { get; set; }
 }
