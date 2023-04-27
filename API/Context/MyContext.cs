@@ -49,7 +49,7 @@ public class MyContext : DbContext
                     .WithOne(a => a.Employee)
                     .HasForeignKey<Account>(a => a.EmployeeNIK)
                     .OnDelete(DeleteBehavior.Restrict);
-
+        
         //One Account has many AccountRoles
         modelBuilder.Entity<Account>()
                     .HasMany(a => a.AccountRoles)
