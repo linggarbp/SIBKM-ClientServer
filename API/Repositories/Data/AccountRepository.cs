@@ -21,12 +21,11 @@ public class AccountRepository : GeneralRepository<Account, string, MyContext>, 
         };
 
         //Before Insert, Check University Id
-        _context.Set<University>().Find(university.Id);
-        if (university.Id != null)
+        if (_context.Universities.Any(u => u.Name.Contains(registerVM.UniversityName)))
         {
-            
+            university.Id = _context.Universities.FirstOrDefault(u => u.Name.Contains(registerVM.UniversityName))!.Id;
         }
-        if (university.Id == null)
+        else
         {
             _context.Set<University>().Add(university);
             result = _context.SaveChanges();
@@ -90,23 +89,12 @@ public class AccountRepository : GeneralRepository<Account, string, MyContext>, 
 
     public bool Login(LoginVM loginVM)
     {
-        var employee = new Employee
-        {
-            Email = loginVM.Email
-        };
-        _context.Employees.Where(e => e.Email.Contains(loginVM.Email));
+        var employeeByEmail = _context.Employees.FirstOrDefault(e => e.Email == loginVM.Email);
+        if (employeeByEmail == null)
+            return false;
 
-        var account = new Account
-        {
-            EmployeeNIK = employee.NIK,
-            Password = loginVM.Password,
-        };
-        _context.Accounts.Where(p => p.Password.Contains(loginVM.Password));
+        var accountByNIK = _context.Accounts.FirstOrDefault(e => e.EmployeeNIK == employeeByEmail.NIK);
 
-        if (employee != null && account != null)
-        {
-            return true;
-        }
-        return false;
+        return accountByNIK != null && loginVM.Password == accountByNIK.Password;
     }
 }
