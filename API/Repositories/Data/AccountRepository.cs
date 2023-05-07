@@ -1,4 +1,5 @@
 ﻿using API.Context;
+using API.Handler;
 using API.Models;
 using API.Repositories.Interface;
 using API.ViewModels;
@@ -61,7 +62,7 @@ public class AccountRepository : GeneralRepository<Account, string, MyContext>, 
         var account = new Account
         {
             EmployeeNIK = registerVM.NIK,
-            Password = registerVM.Password,
+            Password = Hashing.HashPassword(registerVM.Password),
         };
         _context.Set<Account>().Add(account);
         result += _context.SaveChanges();
@@ -89,12 +90,25 @@ public class AccountRepository : GeneralRepository<Account, string, MyContext>, 
 
     public bool Login(LoginVM loginVM)
     {
-        var employeeByEmail = _context.Employees.FirstOrDefault(e => e.Email == loginVM.Email);
-        if (employeeByEmail == null)
+        //var employeeByEmail = _context.Employees.FirstOrDefault(e => e.Email == loginVM.Email);
+        //if (employeeByEmail == null)
+        //    return false;
+
+        //var accountByNIK = _context.Accounts.FirstOrDefault(e => e.EmployeeNIK == employeeByEmail.NIK);
+
+        //return accountByNIK != null && loginVM.Password == accountByNIK.Password;
+
+        var getEmployeeAccount = _context.Employees.Join(_context.Accounts,
+                                                                e => e.NIK,
+                                                                p => p.EmployeeNIK, (e, p) => new
+                                                                {
+                                                                    Email = e.Email,
+                                                                    Password = p.Password,
+                                                                }).FirstOrDefault(e => e.Email == loginVM.Email);
+
+        if (getEmployeeAccount == null)
             return false;
 
-        var accountByNIK = _context.Accounts.FirstOrDefault(e => e.EmployeeNIK == employeeByEmail.NIK);
-
-        return accountByNIK != null && loginVM.Password == accountByNIK.Password;
+        return Hashing.ValidatePassword(loginVM.Password, getEmployeeAccount.Password);
     }
 }
