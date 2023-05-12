@@ -9,4 +9,10 @@ public class EmployeeRepository : GeneralRepository<Employee, string, MyContext>
     public EmployeeRepository(MyContext context) : base(context)
     {
     }
+
+    public string GetFullNameByEmail(string email)
+    {
+        var employee = _context.Employees.FirstOrDefault(x => x.Email == email);
+        return employee.FirstName + " " + employee.LastName;
+    }
 }
