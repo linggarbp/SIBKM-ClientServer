@@ -4,6 +4,7 @@ using API.Models;
 using API.Repositories.Interface;
 using API.ViewModels;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
@@ -14,6 +15,7 @@ namespace API.Controllers;
 [Route("api/[controller]")]
 [ApiController]
 [Authorize(Roles = "admin")]
+//[EnableCors("AnotherPolicy")]
 public class AccountController : GeneralController<IAccountRepository, Account, string>
 {
     private readonly ITokenService _tokenService;

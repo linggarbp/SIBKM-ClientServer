@@ -30,6 +30,26 @@ builder.Services.AddScoped<IRoleRepository, RoleRepository>();
 builder.Services.AddScoped<IUniversityRepository, UniversityRepository>();
 builder.Services.AddTransient<ITokenService, TokenService>();
 
+//Configure CORS
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(policy =>
+    {
+        //policy.WithOrigins("https://url.com/");
+        policy.AllowAnyOrigin();
+        //policy.WithMethods("GET", "POST", "PUT", "DELETE");
+        policy.AllowAnyMethod();
+        //policy.WithHeaders("");
+        policy.AllowAnyHeader();
+    });
+    //options.AddPolicy("AnotherPolicy", policy =>
+    //{
+    //    policy.WithOrigins("https://website.com/");
+    //    policy.WithMethods("GET");
+    //    policy.AllowAnyHeader();
+    //});
+});
+
 //Configure JWT Authentication
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
@@ -93,6 +113,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseCors();
 
 app.UseAuthentication();
 
