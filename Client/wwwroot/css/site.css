@@ -16,3 +16,59 @@ html {
 body {
   margin-bottom: 60px;
 }
+
+.poke-img {
+    width: 80%;
+    border: 5px solid lightgray;
+    display: block;
+    background: #fff;
+    background: linear-gradient(15deg, #cad5b5 64%, #dde2d4 70%, #dde2d4 81%, #fff 86%, #dde2d4 89%, #dde2d4 100%);
+    border-radius: 5px;
+}
+
+.col-md-4 {
+    padding-top: 45px;
+    font-family: "Staatliches", cursive;
+}
+
+.col-md-12 {
+    font-family: "Staatliches", cursive;
+}
+
+.col-md-6 {
+    border: 2px solid lightgray;
+    background: rgb(171,248,249);
+    background: linear-gradient(7deg, rgba(171,248,249,1) 10%, rgba(61,231,232,1) 29%, rgba(246,246,246,1) 91%);
+    font-family: "Staatliches", cursive;
+}
+
+h5 {
+    font-weight: bold;
+}
+
+p {
+    font-weight: lighter;
+}
+
+#descPokemon {
+    text-align: justify;
+    padding-right: 45px;
+}
+
+img {
+    width: 100%;
+}
+
+.types {
+    text-transform: capitalize;
+    font-family: "Staatliches", cursive;
+    padding: 2px;
+    border: groove #757575 3px;
+    border-radius: 10px;
+    width: 150px;
+    text-align: center;
+    letter-spacing: 1px;
+    text-shadow: rgba(255, 255, 255, 0.3) -1px 1px;
+    align-self: center;
+    background-blend-mode: hard-light;
+}

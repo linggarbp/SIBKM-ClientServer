@@ -261,17 +261,14 @@ namespace API.Migrations
 
             modelBuilder.Entity("API.Models.Education", b =>
                 {
-                    b.Navigation("Profiling")
-                        .IsRequired();
+                    b.Navigation("Profiling");
                 });
 
             modelBuilder.Entity("API.Models.Employee", b =>
                 {
-                    b.Navigation("Account")
-                        .IsRequired();
+                    b.Navigation("Account");
 
-                    b.Navigation("Profiling")
-                        .IsRequired();
+                    b.Navigation("Profiling");
                 });
 
             modelBuilder.Entity("API.Models.Role", b =>

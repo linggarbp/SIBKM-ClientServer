@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace API.Migrations
 {
     [DbContext(typeof(MyContext))]
-    [Migration("20230409085903_CompleteDatabaseAPI")]
-    partial class CompleteDatabaseAPI
+    [Migration("20230619075129_DatabaseAPI")]
+    partial class DatabaseAPI
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -51,15 +51,18 @@ namespace API.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("AccountNIK")
-                        .IsRequired()
                         .HasColumnType("char(5)")
                         .HasColumnName("account_nik");
 
-                    b.Property<int>("RoleID")
+                    b.Property<int?>("RoleID")
                         .HasColumnType("int")
                         .HasColumnName("role_id");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("AccountNIK");
+
+                    b.HasIndex("RoleID");
 
                     b.ToTable("tb_tr_account_roles");
                 });
@@ -88,11 +91,13 @@ namespace API.Migrations
                         .HasColumnType("varchar(100)")
                         .HasColumnName("major");
 
-                    b.Property<int>("UniversityID")
+                    b.Property<int?>("UniversityID")
                         .HasColumnType("int")
                         .HasColumnName("university_id");
 
                     b.HasKey("ID");
+
+                    b.HasIndex("UniversityID");
 
                     b.ToTable("tb_m_educations");
                 });
@@ -145,11 +150,15 @@ namespace API.Migrations
                         .HasColumnType("char(5)")
                         .HasColumnName("employee_nik");
 
-                    b.Property<int>("EducationID")
+                    b.Property<int?>("EducationID")
                         .HasColumnType("int")
                         .HasColumnName("education_id");
 
                     b.HasKey("EmployeeNIK");
+
+                    b.HasIndex("EducationID")
+                        .IsUnique()
+                        .HasFilter("[education_id] IS NOT NULL");
 
                     b.ToTable("tb_tr_profilings");
                 });
@@ -190,6 +199,89 @@ namespace API.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("tb_m_universities");
+                });
+
+            modelBuilder.Entity("API.Models.Account", b =>
+                {
+                    b.HasOne("API.Models.Employee", "Employee")
+                        .WithOne("Account")
+                        .HasForeignKey("API.Models.Account", "EmployeeNIK")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Employee");
+                });
+
+            modelBuilder.Entity("API.Models.AccountRole", b =>
+                {
+                    b.HasOne("API.Models.Account", "Account")
+                        .WithMany("AccountRoles")
+                        .HasForeignKey("AccountNIK")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.HasOne("API.Models.Role", "Role")
+                        .WithMany("AccountRoles")
+                        .HasForeignKey("RoleID")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.Navigation("Account");
+
+                    b.Navigation("Role");
+                });
+
+            modelBuilder.Entity("API.Models.Education", b =>
+                {
+                    b.HasOne("API.Models.University", "University")
+                        .WithMany("Educations")
+                        .HasForeignKey("UniversityID")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.Navigation("University");
+                });
+
+            modelBuilder.Entity("API.Models.Profiling", b =>
+                {
+                    b.HasOne("API.Models.Education", "Education")
+                        .WithOne("Profiling")
+                        .HasForeignKey("API.Models.Profiling", "EducationID")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.HasOne("API.Models.Employee", "Employee")
+                        .WithOne("Profiling")
+                        .HasForeignKey("API.Models.Profiling", "EmployeeNIK")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Education");
+
+                    b.Navigation("Employee");
+                });
+
+            modelBuilder.Entity("API.Models.Account", b =>
+                {
+                    b.Navigation("AccountRoles");
+                });
+
+            modelBuilder.Entity("API.Models.Education", b =>
+                {
+                    b.Navigation("Profiling");
+                });
+
+            modelBuilder.Entity("API.Models.Employee", b =>
+                {
+                    b.Navigation("Account");
+
+                    b.Navigation("Profiling");
+                });
+
+            modelBuilder.Entity("API.Models.Role", b =>
+                {
+                    b.Navigation("AccountRoles");
+                });
+
+            modelBuilder.Entity("API.Models.University", b =>
+                {
+                    b.Navigation("Educations");
                 });
 #pragma warning restore 612, 618
         }

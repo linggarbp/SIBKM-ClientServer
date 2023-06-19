@@ -26,7 +26,7 @@ builder.Services.AddScoped<IAccountRoleRepository, AccountRoleRepository>();
 builder.Services.AddScoped<IEducationRepository, EducationRepository>();
 builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
 builder.Services.AddScoped<IProfilingRepository, ProfilingRepository>();
-builder.Services.AddScoped<IRoleRepository, RoleRepository>(); 
+builder.Services.AddScoped<IRoleRepository, RoleRepository>();
 builder.Services.AddScoped<IUniversityRepository, UniversityRepository>();
 builder.Services.AddTransient<ITokenService, TokenService>();
 
@@ -35,15 +35,17 @@ builder.Services.AddCors(options =>
 {
     options.AddDefaultPolicy(policy =>
     {
-        //policy.WithOrigins("https://url.com/");
         policy.AllowAnyOrigin();
-        //policy.WithMethods("GET", "POST", "PUT", "DELETE");
         policy.AllowAnyMethod();
-        //policy.WithHeaders("");
         policy.AllowAnyHeader();
     });
+
     //options.AddPolicy("AnotherPolicy", policy =>
     //{
+    //    https://localhost:7200;http://localhost:5110
+    //    policy.WithOrigins("https://url.com/");
+    //    policy.WithMethods("GET", "POST", "PUT", "DELETE");
+    //    policy.WithHeaders("");
     //    policy.WithOrigins("https://website.com/");
     //    policy.WithMethods("GET");
     //    policy.AllowAnyHeader();
@@ -71,7 +73,8 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(x => {
+builder.Services.AddSwaggerGen(x =>
+{
     x.SwaggerDoc("v1", new OpenApiInfo
     {
         Version = "v1",
